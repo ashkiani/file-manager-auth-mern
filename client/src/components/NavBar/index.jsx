@@ -8,7 +8,7 @@ export default function index() {
       <div className="container">
         <nav className="navbar navbar-light navbar-expand-md bg-faded justify-content-center  bg-info text-white my-2">
           <div className="p-2 w-90">
-            <NavLink className="nav-item" to="/radit">
+            <NavLink className="nav-item" to="/app">
               <button type="button" className="btn btn-link text-light"><img src={image} alt="RAD-IT icon" width="200" height="50"/></button>
             </NavLink>
           </div>

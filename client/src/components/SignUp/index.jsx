@@ -27,7 +27,7 @@ export default class Login extends Component {
     })
       .then(async res => {
         if (res.status === 200) {
-          this.props.history.push("/radit");
+          this.props.history.push("/app");
         } else {
           res.text().then(text => { alert("Error please try again -" + text) });
         }
