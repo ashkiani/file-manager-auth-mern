@@ -1,5 +1,5 @@
 {
-  "name": "radit",
+  "name": "file-manager-auth-mern",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ashkiani/radit.git"
+    "url": "git+https://github.com/ashkiani/file-manager-auth-mern.git"
   },
   "author": "Siavash Ashkiani",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ashkiani/radit/issues"
+    "url": "https://github.com/ashkiani/file-manager-auth-mern/issues"
   },
-  "homepage": "https://github.com/ashkiani/radit#readme",
+  "homepage": "https://github.com/ashkiani/file-manager-auth-mern#readme",
   "devDependencies": {
     "dotenv": "^8.2.0",
     "eslint": "^6.8.0",
