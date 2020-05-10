@@ -25,7 +25,7 @@ export default class Login extends Component {
     })
       .then(res => {
         if (res.status === 200) {
-          this.props.history.push("/radit");
+          this.props.history.push("/app");
         } else {
           const error = new Error(res.error);
           throw error;
