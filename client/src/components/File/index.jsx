@@ -1,4 +1,6 @@
 import React from 'react'
+import FileShare from "../FileShare"
+
 function shareClick(e) {
   console.log("Share Clicked!");
   console.log(e);
@@ -40,7 +42,7 @@ export default function index(props) {
       <td>{name}</td>
       <td>{owner}</td>
       <td><button onClick={() => openClick(id)}><i className="fa fa-folder-open" aria-hidden="true"></i></button></td>
-      <td><button onClick={() => shareClick(id)}><i className="fa fa-share" aria-hidden="true"></i></button></td>
+      <td><FileShare /></td>
       <td><button onClick={() => deleteClick(id)}><i className="fa fa-trash" aria-hidden="true"></i></button></td>
     </tr>
   )
