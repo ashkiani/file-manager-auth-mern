@@ -42,7 +42,7 @@ export default function index(props) {
       <td>{name}</td>
       <td>{owner}</td>
       <td><button onClick={() => openClick(id)}><i className="fa fa-folder-open" aria-hidden="true"></i></button></td>
-      <td><FileShare /></td>
+      <td><FileShare file={props.data.file}/></td>
       <td><button onClick={() => deleteClick(id)}><i className="fa fa-trash" aria-hidden="true"></i></button></td>
     </tr>
   )
