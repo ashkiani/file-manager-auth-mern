@@ -23,9 +23,10 @@ const userSchema = new Schema({
         unique: true,
         required: true
     },
-    files:[{type: Schema.Types.ObjectId,
-    ref: "File",
-    required: false
+    files: [{
+        type: Schema.Types.ObjectId,
+        ref: "File",
+        required: false
     }]
 });
 
@@ -38,7 +39,16 @@ const fileSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User",
         required: true
-    }
+    },
+    shared: [{
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: false
+    }, {
+        type: Number,
+        unique: false,
+        required: false
+    }]
 });
 
 
@@ -46,4 +56,4 @@ const fileSchema = new Schema({
 const User = mongoose.model("User", userSchema);
 const File = mongoose.model("File", fileSchema);
 
-module.exports = {User , File};
+module.exports = { User, File };
