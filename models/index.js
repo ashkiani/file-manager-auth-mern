@@ -41,13 +41,16 @@ const fileSchema = new Schema({
         required: true
     },
     shared: [{
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: false
-    }, {
-        type: Number,
-        unique: false,
-        required: false
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: false
+        }
+        , access: {
+            type: Number,
+            unique: false,
+            required: false
+        }
     }]
 });
 
