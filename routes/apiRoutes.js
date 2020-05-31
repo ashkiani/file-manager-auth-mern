@@ -191,16 +191,18 @@ module.exports = function (app) {
           let dbShareUser = await db.User.findOne({ email: shareWith });
           let shareUserExists = dbShareUser !== null;
           if (shareUserExists) {
-            // try {
-            //   dbUser = await db.User.findOneAndUpdate(
-            //     { _id: dbUser._id },
-            //     { $push: { files: addFile._id } },
-            //     { new: true }
-            //   );
-            //   res.status(200).send(dbUser);
-            // } catch (err) {
-            //   res.status(400).send(err);
-            // }
+            try {
+              let dbFile = await db.File.findOneAndUpdate(
+                { _id: fileId },
+                { $push: { shared: {user:dbShareUser._id,access:0} } },
+                { new: true }
+              );
+              console.log("Saved");
+              console.log(dbFile);
+              res.status(200).send(dbFile);
+            } catch (err) {
+              res.status(400).send(err);
+            }
           }
           else {
             console.log("Share With - email not found.");
