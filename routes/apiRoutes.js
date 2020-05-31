@@ -172,4 +172,59 @@ module.exports = function (app) {
     console.log(files);
     res.status(200).json(files);
   });
+
+  app.post("/api/files/share", middleware.withAuth, async function (req, res) {
+    console.log("POST received at /api/files/share")
+    email = req.email;
+    const { fileId, shareWith } = req.body;
+    try {
+      let dbUser = await db.User.findOne({ email });
+      let userExists = dbUser !== null;
+
+      if (userExists) {
+        console.log("email found.");
+        console.log(dbUser);
+        console.log(dbUser.email);
+        console.log(dbUser._id);
+        console.log(shareWith);
+        try {
+          let dbShareUser = await db.User.findOne({ email: shareWith });
+          let shareUserExists = dbShareUser !== null;
+          if (shareUserExists) {
+            // try {
+            //   dbUser = await db.User.findOneAndUpdate(
+            //     { _id: dbUser._id },
+            //     { $push: { files: addFile._id } },
+            //     { new: true }
+            //   );
+            //   res.status(200).send(dbUser);
+            // } catch (err) {
+            //   res.status(400).send(err);
+            // }
+          }
+          else {
+            console.log("Share With - email not found.");
+            res.status(401).json({
+              error: "Incorrect email for sharing the file.",
+            });
+          }
+
+          
+          
+        } catch (err) {
+          res.status(400).send(err);
+        }
+      } else {
+        console.log("email not found.");
+        res.status(401).json({
+          error: "Incorrect email or password",
+        });
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        error: "Internal error please try again",
+      });
+    }
+  });
 };
