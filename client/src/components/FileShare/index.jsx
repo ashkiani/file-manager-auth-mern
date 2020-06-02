@@ -14,7 +14,7 @@ export default function Index(props) {
         console.log(props.file);
         fetch("/api/files/share", {
             method: "POST",
-            body: JSON.stringify({ fileId: e, shareWith: inputText }),
+            body: JSON.stringify({ fileId: e, shareWith: inputText, access:0 }),
             headers: {
                 "Content-Type": "application/json"
             }

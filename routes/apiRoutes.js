@@ -176,7 +176,7 @@ module.exports = function (app) {
   app.post("/api/files/share", middleware.withAuth, async function (req, res) {
     console.log("POST received at /api/files/share")
     email = req.email;
-    const { fileId, shareWith } = req.body;
+    const { fileId, shareWith, access } = req.body;
     try {
       let dbUser = await db.User.findOne({ email });
       let userExists = dbUser !== null;
@@ -191,16 +191,40 @@ module.exports = function (app) {
           let dbShareUser = await db.User.findOne({ email: shareWith });
           let shareUserExists = dbShareUser !== null;
           if (shareUserExists) {
+            console.log("Shared With User found!");
             try {
-              let dbFile = await db.File.findOneAndUpdate(
-                { _id: fileId },
-                { $push: { shared: {user:dbShareUser._id,access:0} } },
-                { new: true }
-              );
-              console.log("Saved");
-              console.log(dbFile);
-              res.status(200).send(dbFile);
-            } catch (err) {
+              let dbFile = await db.File.findOne({ _id: fileId });
+              let exits = false;
+              console.log("User to be shared with:");
+              console.log(dbShareUser._id);
+              for (let i = 0; i < dbFile.shared.length; i++) {
+                console.log(dbFile.shared[i].user);
+                if (dbFile.shared[i].user.toString() == dbShareUser._id.toString()) {
+                  exits = true;
+                  console.log("Already shared with the same user... checking the access");
+                  if (dbFile.shared[i].access != access) {
+                    dbFile.shared[i].access = access;
+                    dbFile.save();
+                    console.log("Saved existing");
+                  }
+                  else {
+                    console.log("Already shared!");
+                  }
+                  console.log(dbFile);
+                  res.status(200).send(dbFile);
+                }
+              }
+              if (!exits) {
+                dbFile = await db.File.findOneAndUpdate(
+                  { _id: fileId },
+                  { $push: { shared: { user: dbShareUser._id, access: access } } },
+                  { new: true }
+                );
+                console.log("Saved as new");
+                console.log(dbFile);
+                res.status(200).send(dbFile);
+              }
+           } catch (err) {
               res.status(400).send(err);
             }
           }
@@ -210,9 +234,6 @@ module.exports = function (app) {
               error: "Incorrect email for sharing the file.",
             });
           }
-
-          
-          
         } catch (err) {
           res.status(400).send(err);
         }
