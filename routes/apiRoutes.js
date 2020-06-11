@@ -166,19 +166,22 @@ module.exports = function (app) {
       path: 'files',
       populate: { path: 'owner' }
     });
-    let files = dbUser.files
-    console.log(files);
-    files = files.map(file => { return { id: file._id, name: file.name, owner: file.owner.first_name + " " + file.owner.last_name, sharable: true } });
-    console.log(files);
-    let sharedFiles = await db.File.find({ 'shared.user': dbUser._id });//
-    console.log("shared files:");
-    console.log(sharedFiles);
-    for (let i=0;i<sharedFiles.length;i++){
-      dbUser = await db.User.findOne({ _id: sharedFiles[i].owner})
-      files.push({ id: sharedFiles[i]._id, name: sharedFiles[i].name, owner: dbUser.first_name + " " + dbUser.last_name, sharable: false });
+    let files = [];
+    for (let i = 0; i < dbUser.files.length; i++) {
+      let file = dbUser.files[i];
+      let shared = [];
+      for (let j = 0; j < file.shared.length; j++) {
+        let shUser = await db.User.findOne({_id:file.shared[j].user});
+        shared.push(shUser.email);
+      }
+      let obj = { id: file._id, name: file.name, owner: file.owner.first_name + " " + file.owner.last_name, sharable: true, shared }
+      files.push(obj);
     }
-    console.log("---");
-    console.log(files);
+    let sharedFiles = await db.File.find({ 'shared.user': dbUser._id });
+    for (let i = 0; i < sharedFiles.length; i++) {
+      dbUser = await db.User.findOne({ _id: sharedFiles[i].owner })
+      files.push({ id: sharedFiles[i]._id, name: sharedFiles[i].name, owner: dbUser.first_name + " " + dbUser.last_name, sharable: false, shared: null });
+    }
     res.status(200).json(files);
   });
 
