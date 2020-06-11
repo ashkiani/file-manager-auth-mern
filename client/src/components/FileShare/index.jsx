@@ -41,7 +41,7 @@ export default function Index(props) {
     else {
         return (
             <div>
-                <FileAccess file={props.file} />
+                
             </div>
         )
     }
