@@ -185,8 +185,8 @@ module.exports = function (app) {
     res.status(200).json(files);
   });
 
-  app.post("/api/files/share", middleware.withAuth, async function (req, res) {
-    console.log("POST received at /api/files/share")
+  app.post("/api/files/share/add", middleware.withAuth, async function (req, res) {
+    console.log("POST received at /api/files/share/add")
     email = req.email;
     const { fileId, shareWith, access } = req.body;
     try {
@@ -261,5 +261,13 @@ module.exports = function (app) {
         error: "Internal error please try again",
       });
     }
+  });
+  app.delete("/api/files/share/delete", middleware.withAuth, async function (req, res) {
+    console.log("DELETE received at /api/files/share/delete")
+    email = req.email;
+    const { fileId, userEmail } = req.body;
+    console.log(fileId);
+    console.log(userEmail);
+    
   });
 };

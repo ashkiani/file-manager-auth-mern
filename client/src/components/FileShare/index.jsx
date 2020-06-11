@@ -11,7 +11,7 @@ export default function Index(props) {
         console.log("Add/Share Clicked!");
         console.log(e);
         console.log(props.file);
-        fetch("/api/files/share", {
+        fetch("/api/files/share/add", {
             method: "POST",
             body: JSON.stringify({ fileId: e, shareWith: inputText, access: 0 }),
             headers: {
