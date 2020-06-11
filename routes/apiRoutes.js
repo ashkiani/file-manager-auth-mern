@@ -189,78 +189,86 @@ module.exports = function (app) {
     console.log("POST received at /api/files/share/add")
     email = req.email;
     const { fileId, shareWith, access } = req.body;
-    try {
-      let dbUser = await db.User.findOne({ email });
-      let userExists = dbUser !== null;
+    if (email == shareWith) {
+      console.log("Cannot share the file with owner.");
+      res.status(401).json({
+        error: "Cannot share the file with owner.",
+      });
+    } else {
+      try {
+        let dbUser = await db.User.findOne({ email });
+        let userExists = dbUser !== null;
 
-      if (userExists) {
-        console.log("email found.");
-        console.log(dbUser);
-        console.log(dbUser.email);
-        console.log(dbUser._id);
-        console.log(shareWith);
-        try {
-          let dbShareUser = await db.User.findOne({ email: shareWith });
-          let shareUserExists = dbShareUser !== null;
-          if (shareUserExists) {
-            console.log("Shared With User found!");
-            try {
-              let dbFile = await db.File.findOne({ _id: fileId });
-              let exits = false;
-              console.log("User to be shared with:");
-              console.log(dbShareUser._id);
-              for (let i = 0; i < dbFile.shared.length; i++) {
-                console.log(dbFile.shared[i].user);
-                if (dbFile.shared[i].user.toString() == dbShareUser._id.toString()) {
-                  exits = true;
-                  console.log("Already shared with the same user... checking the access");
-                  if (dbFile.shared[i].access != access) {
-                    dbFile.shared[i].access = access;
-                    dbFile.save();
-                    console.log("Saved existing");
+        if (userExists) {
+          console.log("email found.");
+          console.log(dbUser);
+          console.log(dbUser.email);
+          console.log(dbUser._id);
+          console.log(shareWith);
+          try {
+            let dbShareUser = await db.User.findOne({ email: shareWith });
+            let shareUserExists = dbShareUser !== null;
+            if (shareUserExists) {
+              console.log("Shared With User found!");
+              try {
+                let dbFile = await db.File.findOne({ _id: fileId });
+                let exits = false;
+                console.log("User to be shared with:");
+                console.log(dbShareUser._id);
+                for (let i = 0; i < dbFile.shared.length; i++) {
+                  console.log(dbFile.shared[i].user);
+                  if (dbFile.shared[i].user.toString() == dbShareUser._id.toString()) {
+                    exits = true;
+                    console.log("Already shared with the same user... checking the access");
+                    if (dbFile.shared[i].access != access) {
+                      dbFile.shared[i].access = access;
+                      dbFile.save();
+                      console.log("Saved existing");
+                    }
+                    else {
+                      console.log("Already shared!");
+                    }
+                    console.log(dbFile);
+                    res.status(200).send(dbFile);
                   }
-                  else {
-                    console.log("Already shared!");
-                  }
+                }
+                if (!exits) {
+                  dbFile = await db.File.findOneAndUpdate(
+                    { _id: fileId },
+                    { $push: { shared: { user: dbShareUser._id, access: access } } },
+                    { new: true }
+                  );
+                  console.log("Saved as new");
                   console.log(dbFile);
                   res.status(200).send(dbFile);
                 }
+              } catch (err) {
+                res.status(400).send(err);
               }
-              if (!exits) {
-                dbFile = await db.File.findOneAndUpdate(
-                  { _id: fileId },
-                  { $push: { shared: { user: dbShareUser._id, access: access } } },
-                  { new: true }
-                );
-                console.log("Saved as new");
-                console.log(dbFile);
-                res.status(200).send(dbFile);
-              }
-            } catch (err) {
-              res.status(400).send(err);
             }
+            else {
+              console.log("Share With - email not found.");
+              res.status(401).json({
+                error: "Incorrect email for sharing the file.",
+              });
+            }
+          } catch (err) {
+            res.status(400).send(err);
           }
-          else {
-            console.log("Share With - email not found.");
-            res.status(401).json({
-              error: "Incorrect email for sharing the file.",
-            });
-          }
-        } catch (err) {
-          res.status(400).send(err);
+        } else {
+          console.log("email not found.");
+          res.status(401).json({
+            error: "Incorrect email or password",
+          });
         }
-      } else {
-        console.log("email not found.");
-        res.status(401).json({
-          error: "Incorrect email or password",
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({
+          error: "Internal error please try again",
         });
       }
-    } catch (err) {
-      console.log(err);
-      res.status(500).json({
-        error: "Internal error please try again",
-      });
     }
+
   });
   app.delete("/api/files/share/delete", middleware.withAuth, async function (req, res) {
     console.log("DELETE received at /api/files/share/delete")
