@@ -171,7 +171,7 @@ module.exports = function (app) {
       let file = dbUser.files[i];
       let shared = [];
       for (let j = 0; j < file.shared.length; j++) {
-        let shUser = await db.User.findOne({_id:file.shared[j].user});
+        let shUser = await db.User.findOne({ _id: file.shared[j].user });
         shared.push(shUser.email);
       }
       let obj = { id: file._id, name: file.name, owner: file.owner.first_name + " " + file.owner.last_name, sharable: true, shared }
@@ -268,6 +268,21 @@ module.exports = function (app) {
     const { fileId, userEmail } = req.body;
     console.log(fileId);
     console.log(userEmail);
-    
+    let userId = await db.User.findOne({ email: userEmail });
+    userId = userId._id;
+    console.log("userId")
+    console.log(userId)
+    db.File.updateOne({ _id: fileId }, { "$pull": { "shared": { "user": userId } } }, { safe: true, multi: true }, function (err, obj) {
+      if (err) {
+        console.log(err);
+        res.status(500).json({
+          error: "Internal error please try again",
+        });
+      } else {
+        console.log("Blocked user's access to this file");
+        res.status(200).send();
+      }
+    });
+
   });
 };
