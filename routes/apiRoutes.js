@@ -280,7 +280,7 @@ module.exports = function (app) {
     userId = userId._id;
     console.log("userId")
     console.log(userId)
-    db.File.updateOne({ _id: fileId }, { "$pull": { "shared": { "user": userId } } }, { safe: true, multi: true }, function (err, obj) {
+    db.File.updateOne({ _id: fileId }, { "$pull": { "shared": { "user": userId } } }, { safe: true, multi: true }, async function (err, obj) {
       if (err) {
         console.log(err);
         res.status(500).json({
@@ -288,7 +288,14 @@ module.exports = function (app) {
         });
       } else {
         console.log("Blocked user's access to this file");
-        res.status(200).send();
+        let file = await db.File.findOne({_id : fileId});
+        let shared = [];
+        for (let j = 0; j < file.shared.length; j++) {
+          let shUser = await db.User.findOne({ _id: file.shared[j].user });
+          shared.push(shUser.email);
+        }
+        console.log(shared);
+        res.status(200).send({ shared });
       }
     });
 
