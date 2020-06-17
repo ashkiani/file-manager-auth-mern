@@ -2,12 +2,15 @@ import React, { useState } from 'react'
 import FileAccess from "../FileAccess"
 
 export default function Index(props) {
-    const [inputText, setInputText] = useState("");
-    const [fileAcc, setFileAcc] = useState([<FileAccess key={props.file} file={props.file} />]);
-
+    const [fileShareState, setFileShareState] = useState({
+        inputText: "",
+        fileAcc: [<FileAccess key={0} file={props.file} />],
+        key: 0
+    })
+   
     function handleInputChange(event) {
         const { value } = event.target;
-        setInputText(value);
+        setFileShareState({ inputText: value, fileAcc: fileShareState.fileAcc, key: fileShareState.key });
     }
     function openClick(e) {
         console.log("Add/Share Clicked!");
@@ -15,7 +18,7 @@ export default function Index(props) {
         console.log(props.file);
         fetch("/api/files/share/add", {
             method: "POST",
-            body: JSON.stringify({ fileId: e, shareWith: inputText, access: 0 }),
+            body: JSON.stringify({ fileId: e, shareWith: fileShareState.inputText, access: 0 }),
             headers: {
                 "Content-Type": "application/json"
             }
@@ -24,7 +27,7 @@ export default function Index(props) {
             if (res.status === 200) {
                 //   showFiles();
                 const data = await res.json();
-                setFileAcc([<FileAccess file={data} />]);
+                setFileShareState({ inputText: "", fileAcc: [<FileAccess key={fileShareState.key + 1} file={data} />], key: fileShareState.key + 1 });
             } else {
                 res.text().then(text => { alert("Error please try again -" + text) });
             }
@@ -37,9 +40,9 @@ export default function Index(props) {
     if (props.file.sharable) {
         return (
             <div>
-                <input type="text" name="description" placeholder="Enter Username" value={inputText} onChange={handleInputChange} required />
+                <input type="text" name="description" placeholder="Enter Username" value={fileShareState.inputText} onChange={handleInputChange} required />
                 <button onClick={() => openClick(props.file.id)}>Add</button>
-                {fileAcc}
+                {fileShareState.fileAcc}
             </div>
         )
     }
