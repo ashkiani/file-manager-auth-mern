@@ -227,9 +227,18 @@ module.exports = function (app) {
                     }
                     else {
                       console.log("Already shared!");
+                      res.status(401).json({
+                        error: "File is already shared with the entered email.",
+                      });
                     }
-                    console.log(dbFile);
-                    res.status(200).send(dbFile);
+                    let shared = [];
+                    for (let j = 0; j < dbFile.shared.length; j++) {
+                      let shUser = await db.User.findOne({ _id: dbFile.shared[j].user });
+                      shared.push(shUser.email);
+                    }
+                    let obj = { id: dbFile._id, name: dbFile.name, owner: dbFile.owner.first_name + " " + dbFile.owner.last_name, sharable: true, shared }
+                    console.log(obj);
+                    res.status(200).send(obj);
                   }
                 }
                 if (!exits) {
@@ -237,10 +246,17 @@ module.exports = function (app) {
                     { _id: fileId },
                     { $push: { shared: { user: dbShareUser._id, access: access } } },
                     { new: true }
-                  );
+                  ).populate({path: 'owner'});
                   console.log("Saved as new");
-                  console.log(dbFile);
-                  res.status(200).send(dbFile);
+                  
+                  let shared = [];
+                  for (let j = 0; j < dbFile.shared.length; j++) {
+                    let shUser = await db.User.findOne({ _id: dbFile.shared[j].user });
+                    shared.push(shUser.email);
+                  }
+                  let obj = { id: dbFile._id, name: dbFile.name, owner: dbFile.owner.first_name + " " + dbFile.owner.last_name, sharable: true, shared }
+                  console.log(obj);
+                  res.status(200).send(obj);
                 }
               } catch (err) {
                 res.status(400).send(err);
