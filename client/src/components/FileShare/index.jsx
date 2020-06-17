@@ -3,6 +3,8 @@ import FileAccess from "../FileAccess"
 
 export default function Index(props) {
     const [inputText, setInputText] = useState("");
+    const [fileAcc, setFileAcc] = useState([<FileAccess key={props.file} file={props.file} />]);
+
     function handleInputChange(event) {
         const { value } = event.target;
         setInputText(value);
@@ -18,8 +20,11 @@ export default function Index(props) {
                 "Content-Type": "application/json"
             }
         }).then(async res => {
+            console.log(res.status)
             if (res.status === 200) {
                 //   showFiles();
+                const data = await res.json();
+                setFileAcc([<FileAccess file={data} />]);
             } else {
                 res.text().then(text => { alert("Error please try again -" + text) });
             }
@@ -34,14 +39,14 @@ export default function Index(props) {
             <div>
                 <input type="text" name="description" placeholder="Enter Username" value={inputText} onChange={handleInputChange} required />
                 <button onClick={() => openClick(props.file.id)}>Add</button>
-                <FileAccess file={props.file} />
+                {fileAcc}
             </div>
         )
     }
     else {
         return (
             <div>
-                
+
             </div>
         )
     }
