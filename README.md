@@ -1,5 +1,5 @@
-# file-manager-auth-mern
-####  6/17/20
+# File Manager With Authentication - MERN
+####  6/21/2020 (Father's Day version)
 #### By Siavash Ashkiani
 ​
 ## Description
@@ -22,6 +22,7 @@ cd APP-NAME
 npm install
 ```
 * Update the .env file located in the app's root folder for your settings
+See [create-file-manager-app](https://www.npmjs.com/package/create-file-manager-app) for more details
 
 ### Option 2: Clone repo
 * Clone this repository.
@@ -51,7 +52,7 @@ Please email us for further questions at ashkiani@yahoo.com
 ​
 ## Contribution Guidlines 
 ​
-Direct link to site: 
+Direct link to site: [https://siavash-file-manager.herokuapp.com/](https://siavash-file-manager.herokuapp.com/)
 
 ​
 ### License
