@@ -17,7 +17,7 @@ This app is a template that you can use to create your own application. It inclu
 ### Option 1: using NPX (recommended)
 * Execute the following commands:
 ```
-create-file-manager-app APP-NAME
+npx create-file-manager-app APP-NAME
 cd APP-NAME
 npm install
 ```
