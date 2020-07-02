@@ -9,7 +9,7 @@ export default function index() {
         <nav className="navbar navbar-light navbar-expand-md bg-faded justify-content-center  bg-info text-white my-2">
           <div className="p-2 w-90">
             <NavLink className="nav-item" to="/app">
-              <button type="button" className="btn btn-link text-light"><img src={image} alt="RAD-IT icon" width="200" height="50"/></button>
+              <button type="button" className="btn btn-link text-light"><img src={image} alt="App icon" width="200" height="50"/></button>
             </NavLink>
           </div>
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar3">
