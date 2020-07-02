@@ -50,7 +50,7 @@ export default class Login extends Component {
               <div className="col-md-8">
                 <form onSubmit={this.onSubmit}>
                   <div className="card-body">
-                    <h3 className="card-title">Join the bandWAG<i className="far fa-grin-tongue-squint"></i>N</h3>
+                    <h3 className="card-title">Join</h3>
                     <hr />
                     <div className="row">
                       <div className="col">
