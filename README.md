@@ -14,7 +14,7 @@ This app is a template that you can use to create your own application. It inclu
 * User can share their existing files with other users
 
 ## Demo
-
+[Click to watch demo on YouTube](https://www.youtube.com/watch?v=I3CbVeKY-_k)
 [![Demo- YouTube Link](https://img.youtube.com/vi/I3CbVeKY-_k/0.jpg)](https://www.youtube.com/watch?v=I3CbVeKY-_k)
 
 ## Setup/Installation Requirements
